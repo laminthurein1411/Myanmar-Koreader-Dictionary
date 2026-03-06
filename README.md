@@ -5,5 +5,4 @@ Edited this dictionary's .ifo file as non-HTML and changed sametypesequence=h in
 But koreader default font can't support Myanmar text so you need to add NotoSan Myanmar font [manually.]
 (https://github.com/koreader/koreader/discussions/8655#discussioncomment-1950420)
 
-[Noto Sans Myanmar fonts to be used as UI fallback fonts]
-(https://github.com/koreader/koreader/pull/8722)
+[Noto Sans Myanmar fonts to be used as UI fallback fonts](https://github.com/koreader/koreader/pull/8722)
