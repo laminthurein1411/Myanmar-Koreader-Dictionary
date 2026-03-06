@@ -1,0 +1,27 @@
+name: Zip Dict Directory and Upload to Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  zip-and-upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Zip Dict directory
+        run: |
+          cd Dict
+          zip -r ../Dict.zip .
+          cd ..
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Dict.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
