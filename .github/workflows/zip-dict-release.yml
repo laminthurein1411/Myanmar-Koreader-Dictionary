@@ -4,7 +4,7 @@ on:
   workflow_dispatch: # Allows manual trigger from GitHub Actions tab
   push:
     tags:
-      - '*'  # Run on any tag
+      - 'v1.0.0'  # Run on any tag
 
 jobs:
   build-and-release:
