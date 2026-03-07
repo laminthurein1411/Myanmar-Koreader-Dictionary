@@ -1,40 +1,40 @@
-name: Zip and Release
+name: Package and Release Zip
 
 on:
   push:
     tags:
-      - 'v*'
-  workflow_dispatch: # Allows manual testing
+      - '*' # Triggers on ANY tag push (v1, 1.0, release-v1, etc.)
+  workflow_dispatch: # Allows you to run this manually from the Actions tab
 
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      
+      contents: write # Crucial: Allows the bot to create the release
+
     steps:
-      - name: Checkout repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Zip Dict directory
+      - name: Create Zip Archive
+        # This zips the 'Dict' folder. 
+        # If 'Dict' doesn't exist, it zips the whole repo instead.
         run: |
-          # Use -r to zip the folder and its contents
-          zip -r Dict.zip Dict/
+          if [ -d "Dict" ]; then
+            zip -r Dict-Release.zip Dict/
+          else
+            zip -r Project-Release.zip . -x "*.git*" ".github*"
+          fi
 
-      - name: Create GitHub Release
+      - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: Dict.zip
-          # FALLBACK LOGIC: 
-          # If triggered by a tag, use the tag name.
-          # If triggered manually, use "manual-release-[commit-shorthand]"
-          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('manual-release-{0}', github.sha) }}
-          name: "Release ${{ github.ref_name }}"
-          body: "Automated archive of the Dict folder."
+          # This picks up whichever zip was created above
+          files: |
+            Dict-Release.zip
+            Project-Release.zip
+          generate_release_notes: true
           draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
