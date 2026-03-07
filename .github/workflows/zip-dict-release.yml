@@ -3,7 +3,7 @@ name: Zip Dict Directory and Upload to Release
 on:
  push:
   tags:
-      - '*.*.*'
+      - 'v1.0.0'
 
 jobs:
   zip-and-upload:
