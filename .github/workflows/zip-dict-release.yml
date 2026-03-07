@@ -1,11 +1,12 @@
 name: Zip Dict Directory and Upload to Release
 
 on:
-  release:
-    types: [published]
+ push:
+  tags:
+      - '*.*.*'
 
 jobs:
- tag:
+  zip-and-upload:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -25,7 +26,3 @@ jobs:
           files: Dict.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-    tag_name: 'v${{ github.run_number }}'
-    release_name: 'Release v${{ github.run_number }}'
-    body: 'Description of the changes in this release'
