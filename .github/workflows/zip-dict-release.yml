@@ -3,13 +3,13 @@ name: Zip Dict Directory and Upload to Release
 on:
   push:
     tags:
-      - 'v1.0.0' # Triggers on tags starting with v (e.g., v1.0, v2.1.4)
+      - 'v*' # Better: triggers on v1.0.0, v1.0.1, etc.
 
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Essential for the action to create a release
+      contents: write
       
     steps:
       - name: Checkout repository
@@ -17,19 +17,20 @@ jobs:
 
       - name: Zip Dict directory
         run: |
-          cd Dict
-          zip -r ../Dict.zip .
-          cd ..
+          # The -q flag makes it quiet, -r is recursive
+          # We check if the directory exists first to avoid confusing errors
+          if [ -d "Dict" ]; then
+            zip -r Dict.zip Dict/
+          else
+            echo "Directory Dict not found!"
+            exit 1
+          fi
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            Dict.zip
-            # Add other files or patterns here (e.g., dist/*.zip)
-          body: "Release notes for ${{ github.ref_name }}"
-          draft: false
-          prerelease: false
-          
+          files: Dict.zip
+          # This automatically generates notes based on your commits
+          generate_release_notes: true 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
