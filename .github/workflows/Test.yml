@@ -1,0 +1,40 @@
+name: Package and Release Zip
+
+on:
+  push:
+    tags:
+      - '*' # Triggers on ANY tag push (v1, 1.0, release-v1, etc.)
+  workflow_dispatch: # Allows you to run this manually from the Actions tab
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Crucial: Allows the bot to create the release
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Create Zip Archive
+        # This zips the 'Dict' folder. 
+        # If 'Dict' doesn't exist, it zips the whole repo instead.
+        run: |
+          if [ -d "Dict" ]; then
+            zip -r Dict-Release.zip Dict/
+          else
+            zip -r Project-Release.zip . -x "*.git*" ".github*"
+          fi
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          # This picks up whichever zip was created above
+          files: |
+            Dict-Release.zip
+            Project-Release.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
