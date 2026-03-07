@@ -3,7 +3,7 @@ name: Zip Dict Directory and Upload to Release
 on:
   push:
     tags:
-      - 'v*' # Triggers on tags starting with v (e.g., v1.0, v2.1.4)
+      - 'v1.0.0' # Triggers on tags starting with v (e.g., v1.0, v2.1.4)
 
 jobs:
   build-and-release:
