@@ -26,15 +26,11 @@ jobs:
             zip -r Project-Release.zip . -x "*.git*" ".github*"
           fi
 
-      - name: Upload to GitHub Release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          # This picks up whichever zip was created above
-          files: |
-            Dict-Release.zip
-            Project-Release.zip
-          generate_release_notes: true
-          draft: false
-          prerelease: false
+          tag_name: ${{ github.ref_name }} # Forces the action to use the tag that triggered it
+          files: Dict.zip
+          body: "Automated release of Dict directory"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
