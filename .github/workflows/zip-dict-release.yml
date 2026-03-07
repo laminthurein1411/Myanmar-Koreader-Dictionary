@@ -1,15 +1,16 @@
 name: Zip Dict Directory and Upload to Release
 
 on:
- push:
-  tags:
-      - 'v1.0.0'
+  push:
+    tags:
+      - 'v*' # Triggers on tags starting with v (e.g., v1.0, v2.1.4)
 
 jobs:
-  zip-and-upload:
+  build-and-release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Essential for the action to create a release
+      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,9 +21,15 @@ jobs:
           zip -r ../Dict.zip .
           cd ..
 
-      - name: Upload to Release
-        uses: softprops/action-gh-release@v1
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          files: Dict.zip
+          files: |
+            Dict.zip
+            # Add other files or patterns here (e.g., dist/*.zip)
+          body: "Release notes for ${{ github.ref_name }}"
+          draft: false
+          prerelease: false
+          
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
