@@ -1,24 +1,26 @@
-name: IP Release ZIP for Dict
+name: Zip Dict Directory and Upload to Release
 
 on:
-  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
-  push:
-    tags:
-      - 'v*'  # Run on any tag
+  release:
+    types: [published]
 
 jobs:
-  build-and-release:
+  zip-and-upload:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Zip Dict folder
+      - name: Zip Dict directory
         run: |
-          zip -r Dict.zip Dict
+          cd Dict
+          zip -r ../Dict.zip .
+          cd ..
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
         with:
           files: Dict.zip
         env:
