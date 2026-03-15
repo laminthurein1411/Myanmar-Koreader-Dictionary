@@ -5,12 +5,14 @@ if html use `<rubyBox T="rtc">`
 
 Create `koreader/styletweak/smaller_ruby_text.css` with:
 
-```rubyBox[T="rtc"] {
+```
+rubyBox[T="rtc"] {
     font-size: 70% !important;
 }
 ```
 Or
-```rt {
+```
+rt {
     font-size: 0.7em !important;
 }
 ```
